@@ -6,8 +6,15 @@ namespace Garage_1._0
         static void Main(string[] args)
         {
 
-            UI uI = new UI();
-            uI.StartProgram();
+            try
+            {
+                UI uI = new UI();
+                uI.StartProgram();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ett oväntad fel inträffade: {ex.Message}");
+            }
 
 
         }

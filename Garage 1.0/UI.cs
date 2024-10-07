@@ -10,9 +10,8 @@ namespace Garage_1._0
 {
     internal class UI
     {
-        Garage<Vehicle> garage = new Garage<Vehicle>();
+      
         GarageHandler gh = new GarageHandler();
-
 
         bool isAlive = true;
 
@@ -30,14 +29,24 @@ namespace Garage_1._0
                        "\n0: Slutar programmet                           -" +
                     "\n - - - - - - - - - - - - - - - - - - - - - - - -");
 
-                string input = Console.ReadLine();
+               
+                 int input = int.Parse(Console.ReadLine());
+                    if (input < 0 || input > 4)
+                    {
+                        Console.WriteLine("Matade värde ska vara mellan 0 - 4");
+                    }
 
-                switch (input)
+
+                    switch (input)
                 {
-                    case "1":
+                    case 1:
                         Console.WriteLine("Välj typ av fordon som ska parkera, (1) för bil, (2) för motorcykle , (3) for buss");
 
                         int valFordon = int.Parse(Console.ReadLine());
+                        if (valFordon < 1 || valFordon > 3)
+                        {
+                            Console.WriteLine("Matade värde ska vara mellan 1 - 3");
+                        }
 
                         if (valFordon == 1)
                         {                          
@@ -51,82 +60,36 @@ namespace Garage_1._0
                         else if (valFordon == 3)
                         {
                           gh.AddVehicleHelperBus();
-
                         }
-                        break;
-
-
-                    case "2":
-                        Console.WriteLine("Ange Registernummer på bilen som ska tas bort:");
-                        registerNumber = Console.ReadLine();
-                        garage.RemoveVehicle(registerNumber);
-                        break;
-
-
-                    case "3":
-                        IEnumerable<Vehicle> vehicles = garage.GetVehicles();
-
-                        if (vehicles == null || !vehicles.Any())
-                        {
-                            Console.WriteLine("inga bil parkerade i garaget");
-                        }
-                        else
-                        {
-
-                            foreach (Vehicle veh in vehicles)
-                            {
-                                if (veh is Car car)
-                                {
-                                    Console.WriteLine($"Bilen med regnummer {car.RegisterNumber}, {car.Color} färg och {car.NumberOfWheels} antal hjul och {car.EngineVolume} motorvolym är parkerad.");
-                                }
-
-
-                                else if (veh is Motorcycle motorcycle)
-                                {
-
-                                    Console.WriteLine($"Motorcycle med regnummer {motorcycle.RegisterNumber}, {motorcycle.Color} färg och {motorcycle.NumberOfWheels} antal hjul och Max speed {motorcycle.MaxSpeed} är parkerad.");
-
-                                }
-
-                                else if (veh is Bus bus)
-                                {
-
-                                    Console.WriteLine($"Bussen med regnummer {bus.RegisterNumber}, {bus.Color} färg och {bus.NumberOfWheels} antal hjul och {bus.NumberOfSeats} antal säten är parkerad.");
-                                }
-                            }
-                        }
-
                         Console.WriteLine();
                         break;
 
 
-
-                    case "4":
-                        Console.WriteLine("Ange din sök ord:");
-                        string seekWord = Console.ReadLine();
-                        IEnumerable<Vehicle> result = garage.FindVehicle(seekWord);
-                  
-
-                        if (result.Any())
-                            foreach (Vehicle vehicle1 in result)
-                            {
-                                if(vehicle1!= null)
-                                {
-                                    Console.WriteLine($"Hittade fordon är: {vehicle1.GetType().Name} Färg:{vehicle1.Color} RegNr:{vehicle1.RegisterNumber}");
-                                }
-                            }
-
-                        else
-                        {
-                           Console.WriteLine("Hittades inga fordon för denna sökning");
-                        }
-                        
+                    case 2:                       
+                        gh.RemoveVehicleHelper();
                         break;
 
 
-                    case "0":
+                    case 3:                       
+                        gh.GetVehicleHelper();
+                        break;
+
+
+
+                    case 4:
+                        gh.SeekVehicleHelper();
+                        break;
+
+
+                    case 0:
                         isAlive = false;
                         break;
+
+
+                    default:
+                        Console.WriteLine("Ogiltig input, försök igen.");
+                        break;
+
 
                 }
             } while (isAlive);

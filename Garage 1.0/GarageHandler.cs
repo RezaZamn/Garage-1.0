@@ -17,8 +17,8 @@ namespace Garage_1._0
         int antalHjul;
         int maxSpeed;
         int numberOfSeats;
-        int? numberOfWheels;
 
+        //Tar emot sträng värden och kan användas för inmatningen
         public static string AskForString(string prompt)
         {
             bool success = false;
@@ -43,7 +43,7 @@ namespace Garage_1._0
             return answer;
         }
 
-
+        //Tar emot Int värden och kan användas för inmatningen
         public static int AskForInt(string prompt)
         {
             int result = 0;
@@ -67,14 +67,22 @@ namespace Garage_1._0
 
         public void AddVehicleHelperCar()
         {
-            registerNumber = AskForString("RegisterNumber");           
-            color = AskForString("Color");          
+            registerNumber = AskForString("RegisterNumber");
+            color = AskForString("Color");
             engineVolume = AskForInt("engineVolume");
             antalHjul = AskForInt("AntalHjul");
 
             Car newCar = new Car(registerNumber, color, antalHjul, engineVolume);
             garage.AddVehicle(newCar);
 
+        }
+
+        public void RemoveVehicleHelper()
+        {
+            Console.WriteLine("Ange Registernummer på bilen som ska tas bort:");
+            registerNumber = Console.ReadLine();
+            garage.RemoveVehicle(registerNumber);
+           
         }
 
         public void AddVehicleHelperMotorcycle()
@@ -103,7 +111,6 @@ namespace Garage_1._0
 
         }
 
-
         public void AddVehicleHelperBus()
         {
             registerNumber = AskForString("RegisterNumber");
@@ -116,8 +123,59 @@ namespace Garage_1._0
             garage.AddVehicle(newBus);
         }
 
-        
-       
+        public void GetVehicleHelper()
+        {
+            IEnumerable<Vehicle> totalVehicles = garage.GetVehicles();
+            Console.WriteLine($"Antal fordon: {totalVehicles.Count()}");
+
+            foreach (Vehicle vehicle in totalVehicles)
+            {
+                if (vehicle is Car car)
+                {
+                    Console.WriteLine($"Bilen med regnummer {car.RegisterNumber}, {car.Color} färg och {car.NumberOfWheels} antal hjul och {car.EngineVolume} motorvolym är parkerad.");
+                }
+
+
+                else if (vehicle is Motorcycle motorcycle)
+                {
+
+                    Console.WriteLine($"Motorcycle med regnummer {motorcycle.RegisterNumber}, {motorcycle.Color} färg och {motorcycle.NumberOfWheels} antal hjul och Max speed {motorcycle.MaxSpeed} är parkerad.");
+
+                }
+
+                else if (vehicle is Bus bus)
+                {
+
+                    Console.WriteLine($"Bussen med regnummer {bus.RegisterNumber}, {bus.Color} färg och {bus.NumberOfWheels} antal hjul och {bus.NumberOfSeats} antal säten är parkerad.");
+                }
+            }
+           
+            Console.WriteLine();
+        }
+
+
+        public void SeekVehicleHelper()
+        {
+            Console.WriteLine("Ange din sök ord:");
+            string seekWord = Console.ReadLine();
+            IEnumerable<Vehicle> result = garage.FindVehicle(seekWord);
+
+            if (result != null)
+                foreach (Vehicle vehicle1 in result)
+                {
+                    if (vehicle1 != null)
+                    {
+                        Console.WriteLine($"Hittade fordon är: {vehicle1.GetType().Name} Färg:{vehicle1.Color} RegNr:{vehicle1.RegisterNumber}");
+                    }
+                }
+
+            else
+            {
+                Console.WriteLine("Hittades inga fordon för denna sökning");
+            }
+        }
+
+
 
     }
 }

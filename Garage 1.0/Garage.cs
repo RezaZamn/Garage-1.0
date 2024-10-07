@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Garage_1._0
 {
-    internal class Garage<T>
+    internal class Garage<T> where T : Vehicle
     {
         private Vehicle[] vehicles { get; set; }
 
@@ -18,45 +18,52 @@ namespace Garage_1._0
         }
 
 
+        // Addar fordon till garaget
+        internal void AddVehicle(Vehicle vehicle)
+        {
+            //Kollar om fordonet är null
+            if (vehicle == null)
+            { throw new ArgumentNullException(nameof(vehicle), "Fordonet kan inte vara null."); }
+
+            //Loopen går genom Arrayen och hittar den första lediga platsen
+            for (int i = 0; i < vehicles.Length; i++)
+            {
+                if (vehicles[i] == null) //Kontrollerar om platsen är tom
+                {
+                    vehicles[i] = vehicle;     // Lägger nya fordonet i den lediga platsen
+                    Console.WriteLine($"Fordonet med registernummret {vehicle.RegisterNumber} har lagts till.");
+                    return;
+                }
+            }
+
+            Console.WriteLine("Garaget är full och finns inga lediga platser.");
+
+        }
+
         internal IEnumerable<Vehicle> GetVehicles()
         {
             return vehicles.Where(vehicle => vehicle != null); //Returnerar de platser som inte är null. 
         }
 
 
-        // Addar fordon till garaget
-        internal void AddVehicle(Vehicle v)
-        {
-            if (v == null)
-            { throw new ArgumentNullException(nameof(v), "Fordonet kan inte vara null"); }
-            //Loopen går genom Arrayen och hittar den första lediga platsen
-            for (int i = 0; i < vehicles.Length; i++)
-            {
-                if (vehicles[i] == null) //Kontrollerar om platsen är tom
-                {
-                    vehicles[i] = v;     // Lägger nya fordonet i den lediga platsen
-                    return;
-                }
-            }
-
-        }
-
-
         //Tar bort fordon från vehicles arrayen
-        internal void RemoveVehicle(string registerNumber)
+        internal bool RemoveVehicle(string registerNumber)
         {
             for (int i = 0; i < vehicles.Length; i++)
             {
                 //Kollar om fordonens register nummer är lika med inmatade register nummer.
-                if (vehicles[i].RegisterNumber == registerNumber)
+                if (vehicles[i] != null && vehicles[i].RegisterNumber == registerNumber)
                 {
                     vehicles[i] = null; //Tar bort fordonet genom att sätta den platsen till null.
-                    break;
+                    Console.WriteLine($"Fordonet med registernummret {registerNumber} har tagits bort.");
+                    return true;
                 }
 
             }
-
+            Console.WriteLine("Fordonet hittades inte");        
+            return false;
         }
+
 
         //En metod som kan söka genom garaget
         internal IEnumerable<Vehicle> FindVehicle(string userSearchWords)
@@ -73,7 +80,7 @@ namespace Garage_1._0
             query = query.Where(vehicle => (searchWords.Contains("bil") && vehicle is Car) ||
                                            (searchWords.Contains("motorcykel") && vehicle is Motorcycle) ||
                                            (searchWords.Contains("buss") && vehicle is Bus) ||
-                                           searchWords.Any(searchWords => searchWords == vehicle.RegisterNumber.ToLower()) ||
+                                           searchWords.Any(searchWords => searchWords == vehicle.RegisterNumber.ToLower()) ||                                          
                                            (vehicle.Color.ToLower() == colorInput));
 
             return query;
@@ -92,7 +99,7 @@ namespace Garage_1._0
                 }
 
             }
-            return null;
+            return string.Empty;
         }
 
 
